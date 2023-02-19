@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebPubSub.Services", "src\Backend\AzureWebPubSub.Services\AzureWebPubSub.Services.csproj", "{90BA2B24-644F-495F-8ED5-22847B610BB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureWebPubSub.Api", "src\Backend\AzureWebPubSub.Api\AzureWebPubSub.Api.csproj", "{B968555F-5EEB-4A36-B3DB-591E40FBC75A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{90BA2B24-644F-495F-8ED5-22847B610BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90BA2B24-644F-495F-8ED5-22847B610BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90BA2B24-644F-495F-8ED5-22847B610BB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B968555F-5EEB-4A36-B3DB-591E40FBC75A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B968555F-5EEB-4A36-B3DB-591E40FBC75A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B968555F-5EEB-4A36-B3DB-591E40FBC75A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B968555F-5EEB-4A36-B3DB-591E40FBC75A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
