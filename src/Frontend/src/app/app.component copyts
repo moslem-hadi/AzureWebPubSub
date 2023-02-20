@@ -1,0 +1,74 @@
+import { Component, OnInit } from '@angular/core';
+import { WebsocketConnectionService } from './websocket-connection.service';
+ 
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  title = 'AzureSubscriber';
+  messagesReceived: Array<Message> = [];
+  selectedUser: string =crypto.randomUUID();
+  selectedTenantId: string =crypto.randomUUID();
+  connected:boolean = false;
+  loading: boolean = false;
+  messageEvent = MessageEvent;
+  constructor(private wsService: WebsocketConnectionService){
+
+  }
+
+  ngOnInit(): void {
+    // this.wsService.connect()
+    //   .subscribe((msg)=>{
+    //     console.log(msg);
+    //     this.messagesReceived.push(msg.Text);
+    // });
+  }
+
+  async connect(){
+    this.loading=true;
+    var apiUrl = 'https://localhost:5807/api/pubsub/';
+    var link = await (await fetch(apiUrl+`GetWs?userId=${this.selectedUser}&tenantId=${this.selectedTenantId}`)).text();
+
+    let ws = new WebSocket(link);
+    ws.onopen = async ()=> {
+      await fetch(apiUrl+`AddGroup?userId=${this.selectedUser}&tenantId=${this.selectedTenantId}`);
+      this.connected = true;
+      this.loading=false;
+
+    };
+
+    ws.onmessage = (event)=>{
+      let message:Message = JSON.parse(event.data)
+      this.messagesReceived.push(message);
+    }
+  }
+
+
+  //   this.wsService.connect(this.selectedUser,'tenant1')
+  //   .subscribe((msg)=>{
+  //     console.log(msg);
+  //     this.messagesReceived.push(msg.Content);
+  // });
+  //}
+
+  // AddToGroup(){
+  //   this.wsService.addGroup(this.selectedUser,'tenant1');
+  // }
+  
+
+  
+}
+
+interface Message{
+  Content:string,
+  Date: Date,
+  Event: MessageEvent
+}
+enum MessageEvent
+{
+    ActivityCreated,
+    Maintenance,
+    NewNotification
+}
