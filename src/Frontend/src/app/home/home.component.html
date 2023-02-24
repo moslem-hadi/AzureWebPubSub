@@ -1,13 +1,16 @@
 
 <div class="content" role="main">
+  <a routerLink="/about"><button class="btn btn-primary" > Go to about </button></a>
+  <br>
  
+  <h3 class="title">Maintenance Messages:</h3>
+    <p *ngIf="!messagesReceived.length">Nothing yet</p>
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let item of messagesReceived; index as i;">
-        <b>{{item.Data}}</b>
+        <b>{{item.Data.Text}}</b>
         <div class="info"><span>{{item.Event}}</span><span>{{item.Date}}</span></div>
       </li>
     </ul>
   
-    <a routerLink="/about"><button class="btn btn-primary" > Go to about </button></a>
   
   </div>

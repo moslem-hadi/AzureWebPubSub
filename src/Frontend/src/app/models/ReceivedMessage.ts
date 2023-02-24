@@ -7,5 +7,5 @@ export interface ReceivedMessage{
   export enum MessageEvents
   {
       Maintenance = 'Maintenance',
-      NewNotification ='NewNotification'
+      Notification ='Notification'
   }

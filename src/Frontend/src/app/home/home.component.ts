@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit, OnDestroy  {
 
   messagesReceived: Array<ReceivedMessage> = [];
 
-
   constructor(private websocket: WebsocketConnectionService){
    
   } 
@@ -27,8 +26,8 @@ export class HomeComponent implements OnInit, OnDestroy  {
     this.websocketSub = this.websocket.eventSubscribe(MessageEvents.Maintenance)
       .subscribe((msg:ReceivedMessage)=>{
         this.messagesReceived.push(msg);
+        console.log(msg);
       });
   }
-
   
 }

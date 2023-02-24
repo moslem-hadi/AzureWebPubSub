@@ -50,6 +50,14 @@ namespace AzureWebPubSub.Api.Controllers
             else
                 await webSocketService.SendToAll(message);
 
+
+
+            var notif = new Notification
+            {
+                Data = "Hello All :)"
+            };
+            await webSocketService.SendToAll(notif);
+
             return Ok();
         }
     }

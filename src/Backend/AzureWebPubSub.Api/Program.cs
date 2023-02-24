@@ -11,7 +11,7 @@ namespace AzureWebPubSub.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            builder.Services.Configure<AzurePubsubConfig>(builder.Configuration.GetSection("AzurePubsubConfig"));
+            builder.Services.Configure<AzurePubsubConfig>(builder.Configuration.GetSection(nameof(AzurePubsubConfig)));
             builder.Services.AddSingleton<IWebSocketService, AzureWebSocketService>();
 
             builder.Services.AddCors(options =>

@@ -1,11 +1,10 @@
-﻿namespace AzureWebPubSub.Services.Models
+﻿namespace AzureWebPubSub.Services.Models;
+
+//Sample
+public class Maintenance : MessageBase<MaintenanceData>
 {
-    //Sample
-    public class Maintenance : MessageBase<MaintenanceData>
-    {
-    }
-    public class MaintenanceData
-    {
-        public string Text { get; set; }
-    }
+}
+public class MaintenanceData
+{
+    public string Text { get; set; }
 }

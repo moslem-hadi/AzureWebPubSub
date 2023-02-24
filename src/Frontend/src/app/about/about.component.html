@@ -1,1 +1,16 @@
-<p>about works!</p>
+
+<div class="content" role="main">
+    <a routerLink="/"><button class="btn btn-primary" > Go to home </button></a>
+    <br>
+   
+    <h3 class="title">Notification Messages:</h3>
+      <p *ngIf="!messagesReceived.length">Nothing yet</p>
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let item of messagesReceived; index as i;">
+          <b>{{item.Data}}</b>
+          <div class="info"><span>{{item.Event}}</span><span>{{item.Date}}</span></div>
+        </li>
+      </ul>
+    
+    
+    </div>
