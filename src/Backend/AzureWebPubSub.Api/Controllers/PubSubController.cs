@@ -16,19 +16,19 @@ namespace AzureWebPubSub.Api.Controllers
             this.webSocketService = webSocketService;
         }
 
-        [HttpPost("connect")]
-        public async Task<IActionResult> Connect(ConnectDto dto)
+        [HttpGet(nameof(Negotiate))]
+        public async Task<string> Negotiate(Guid userId)
         {
-            return Ok(await webSocketService.GetClientAccessUri(dto.UserId));
+            return await webSocketService.GetClientAccessUri(userId);
         }
 
-
-        [HttpPost("join")]
-        public async Task<IActionResult> JoinGroup(JoinDto dto)
+        [HttpGet(nameof(Join))]
+        public async Task<bool> Join(Guid userId, Guid groupId)
         {
-            await webSocketService.AddUserToGroup(dto.UserId, dto.GroupId);
-            return Ok();
+            await webSocketService.AddUserToGroup(userId, groupId);
+            return true;
         }
+
 
 
         //sample
