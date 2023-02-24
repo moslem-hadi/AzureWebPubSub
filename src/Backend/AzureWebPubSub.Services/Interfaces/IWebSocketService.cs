@@ -1,13 +1,12 @@
 ﻿using AzureWebPubSub.Services.Models;
 
-namespace AzureWebPubSub.Services.Interfaces
+namespace AzureWebPubSub.Services.Interfaces;
+
+public interface IWebSocketService
 {
-    public interface IWebSocketService
-    {
-        Task<string> GetClientAccessUri(Guid userId);
-        Task AddUserToGroup(Guid userId, Guid groupId);
-        Task SendToAll(Message message);
-        Task SendToUser(Guid userId, Message message);
-        Task SendToTenantUsers(Guid groupId, Message message);
-    }
+    Task<string> GetClientAccessUri(Guid userId);
+    Task AddUserToGroup(Guid userId, Guid groupId);
+    Task SendToAll<TData>(MessageBase<TData> message);
+    Task SendToUser<TData>(Guid userId, MessageBase<TData> message);
+    Task SendToGroupUsers<TData>(Guid groupId, MessageBase<TData> message);
 }

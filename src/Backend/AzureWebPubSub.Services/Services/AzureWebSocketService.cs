@@ -3,17 +3,12 @@ using AzureWebPubSub.Services.Interfaces;
 using AzureWebPubSub.Services.Models;
 using AzureWebPubSub.Services.Utils;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AzureWebPubSub.Services.Services
 {
     public class AzureWebSocketService : IWebSocketService
     {
+        private TimeSpan connectionExpiry = TimeSpan.FromHours(2);
         private readonly WebPubSubServiceClient pubSubServiceClient;
         public AzureWebSocketService(IOptions<AzurePubsubConfig> config)
         {
@@ -27,8 +22,8 @@ namespace AzureWebPubSub.Services.Services
         {
             var uri = await pubSubServiceClient.GetClientAccessUriAsync(
                 userId: userId.ToString(),
-                expiresAfter: TimeSpan.FromHours(2)
-                ); 
+                expiresAfter: connectionExpiry
+                );
 
             return uri.ToString();
         }
@@ -37,17 +32,17 @@ namespace AzureWebPubSub.Services.Services
             await pubSubServiceClient.AddUserToGroupAsync(groupId.ToString(), userId.ToString());
         }
 
-        public async Task SendToAll(Message message)
+        public async Task SendToAll<TData>(MessageBase<TData> message)
         {
             await pubSubServiceClient.SendToAllAsync(JSON.Stringify(message));
         }
 
-        public async Task SendToTenantUsers(Guid groupId, Message message)
+        public async Task SendToGroupUsers<TData>(Guid groupId, MessageBase<TData> message)
         {
             await pubSubServiceClient.SendToGroupAsync(groupId.ToString(), JSON.Stringify(message));
         }
 
-        public async Task SendToUser(Guid userId, Message message)
+        public async Task SendToUser<TData>(Guid userId, MessageBase<TData> message)
         {
             await pubSubServiceClient.SendToUserAsync(userId.ToString(), JSON.Stringify(message));
         }

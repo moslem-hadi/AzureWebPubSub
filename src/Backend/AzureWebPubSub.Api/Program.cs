@@ -22,7 +22,7 @@ namespace AzureWebPubSub.Api
 
 
             app.MapControllers();
-
+            app.MapGet("/", context => context.Response.WriteAsync("PubSub API works..."));
             app.Run();
         }
     }

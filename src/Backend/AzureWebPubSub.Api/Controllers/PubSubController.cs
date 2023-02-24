@@ -35,16 +35,18 @@ namespace AzureWebPubSub.Api.Controllers
         [HttpPost("Send")]
         public async Task<IActionResult> SampleSend(SampleSendDto dto)
         {
-            var message = MessageBuilder.Create("A new message")
-                .ForEvent(MessageEvent.Maintenance)
-                .ToUser(dto.UserId)
-                .ToTenant(dto.GroupId)
-                .Build();
+            var message = new Maintenance
+            {
+                Data = new()
+                {
+                    Text = "There is a maintenance comming up."
+                }
+            };
 
-            if (message.UserId is not null)
-                await webSocketService.SendToUser((Guid)message.UserId, message);
-            else if (message.TenantId is not null)
-                await webSocketService.SendToTenantUsers((Guid)message.TenantId, message);
+            if (dto.UserId is not null)
+                await webSocketService.SendToUser((Guid)dto.UserId, message);
+            else if (dto.GroupId is not null)
+                await webSocketService.SendToGroupUsers((Guid)dto.GroupId, message);
             else
                 await webSocketService.SendToAll(message);
 
