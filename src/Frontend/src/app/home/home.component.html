@@ -1,20 +1,10 @@
 
 <div class="content" role="main">
-
-    <div *ngIf="!connected" class="text-center">
-      User Id: <input class="form-control" placeholder="User Id" type="text" [(ngModel)]="selectedUser"><br>
-      Tenant: &nbsp;<input class="form-control" placeholder="Tenant Id" type="text" [(ngModel)]="selectedTenantId"><br>
-      <button class="btn btn-primary" (click)="connect()">{{loading ? 'Connecting' : 'Connect'}}</button> 
-    </div>
-    <div *ngIf="connected"  class="text-center">
-      User Id: <b>{{selectedUser}}</b><br>
-      Tenant: &nbsp;<b>{{selectedTenantId}}</b><br>
-    </div>
-    <br>
+ 
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let item of messagesReceived; index as i;">
-        <b>{{item.Content}}</b>
-        <div class="info"><span>{{messageEvent[item.Event]}}</span><span>{{item.Date}}</span></div>
+        <b>{{item.Data}}</b>
+        <div class="info"><span>{{item.Event}}</span><span>{{item.Date}}</span></div>
       </li>
     </ul>
   

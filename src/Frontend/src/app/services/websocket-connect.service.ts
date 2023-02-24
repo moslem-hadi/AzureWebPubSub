@@ -1,65 +1,52 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
-import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ReceivedMessage } from './Messages';
+import {  filter, Observable, retry, RetryConfig, Subject } from 'rxjs';
 
-
+import { webSocket } from 'rxjs/webSocket';
+import { MessageEvents, ReceivedMessage } from '../models/ReceivedMessage';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-
-
-export class WebsocketConnectService {
-  private observable: Observable<MessageEvent>;
-  public messages: Subject<ReceivedMessage>;
-
-  constructor() {
-      // this.messages = <Subject<Message>>this.connect(CHAT_URL).pipe(
-      //     map(
-      //         (response: MessageEvent): Message => {
-      //             console.log(response.data);
-      //             let data = JSON.parse(response.data)
-      //             return data;
-      //         }
-      //     )
-      // );
+export class WebsocketConnectionService {
+  private apiUrl = 'https://localhost:7027/pubsub';
+  private connected = false;
+  private retryConfig: RetryConfig = {
+    delay: 5000,
+    count: 5,
+    resetOnSuccess: true
+  };
+  public messages: Subject<ReceivedMessage> = new Subject<ReceivedMessage>();
+  constructor(private authService: AuthService) {
   }
 
-  public connect(CHAT_URL:string): Observable<MessageEvent> {
-      if (!this.observable) {
-          this.observable = this.create(CHAT_URL);
-          console.log("Successfully connected: " + CHAT_URL);
-      }
-      return this.observable;
+  async connect(){
+    var wsLink = await (await fetch(this.apiUrl+`/negotiate?userId=${this.authService.getUserId()}`)).text();
+    let ws = webSocket<any>({
+      url: wsLink,
+      openObserver: {
+        next: async () => {
+            console.log("connected to websocket");
+            
+          if(!this.connected){
+            await fetch(this.apiUrl+`/join?userId=${this.authService.getUserId()}&tenantId=${this.authService.getGroupId()}`);
+          this.connected=true;
+          }
+        },
+      },
+      closeObserver:{ next:()=>console.log("websocket closed")},
+
+    });
+
+    ws.pipe(
+      retry(this.retryConfig) 
+      ).subscribe(this.messages);
   }
 
-  private create(CHAT_URL:string): Observable<MessageEvent> {
-      let ws = new WebSocket(CHAT_URL);
-      let observable = new Observable((obs: Observer<MessageEvent>) => {
-          ws.onmessage = obs.next.bind(obs);
-          ws.onerror = obs.error.bind(obs);
-          ws.onclose = obs.complete.bind(obs);
-          return ws.close.bind(ws);
-      });
-
-      return observable;
-      // let observer:Observer<MessageEvent<any>> = {
-      //   next: (data: Object) => {
-      //     console.log('Message sent to websocket: ', data);
-      //     if (ws.readyState === WebSocket.OPEN) {
-      //       ws.send(JSON.stringify(data));
-      //     }
-      //   },
-      //   error: function (err: any): void {
-      //     throw new Error('Function not implemented.');
-      //   },
-      //   complete: function (): void {
-      //     throw new Error('Function not implemented.');
-      //   }
-      // };
-      // return new AnonymousSubject<MessageEvent>(observer, observable);
-  }
+  
+eventSubscribe(event: MessageEvents): Observable<any>{
+  return this.messages?.pipe(
+    filter((msg: ReceivedMessage) =>msg.Event == event))
+}
+ 
 }

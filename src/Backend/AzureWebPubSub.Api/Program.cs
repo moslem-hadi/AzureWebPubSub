@@ -14,8 +14,20 @@ namespace AzureWebPubSub.Api
             builder.Services.Configure<AzurePubsubConfig>(builder.Configuration.GetSection("AzurePubsubConfig"));
             builder.Services.AddSingleton<IWebSocketService, AzureWebSocketService>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: "_allowfrontendapp",
+                policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
+                });
+            });
             var app = builder.Build();
-
+            app.UseCors("_allowfrontendapp");
+         
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
